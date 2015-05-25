@@ -1,0 +1,106 @@
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    tools:context=".ZymActivity" >
+ 
+
+   <LinearLayout
+        android:id="@+id/LL1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+        
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown" 
+                android:dropDownSelector="#FFA54F"
+                android:popupBackground="#EDEDED"
+                android:dropDownWidth="105dp"
+                android:dropDownVerticalOffset="1dp"
+                style="@style/spinner_style"/>
+    		 
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown"
+                android:dropDownSelector="#FFA54F"
+                android:popupBackground="#EDEDED"
+                android:dropDownWidth="105dp"
+                android:dropDownVerticalOffset="1dp" 
+                style="@style/spinner_style"/>
+            
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_weight="1" 
+                android:spinnerMode="dropdown"
+                android:dropDownSelector="#FFA54F"
+                android:popupBackground="#EDEDED"
+                android:dropDownWidth="105dp"
+                android:dropDownVerticalOffset="1dp" 
+                style="@style/spinner_style"/>
+  </LinearLayout>
+   <LinearLayout
+        android:id="@+id/LL2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal">
+            
+       
+        <TextView
+		        android:id="@+id/TS1"
+		        android:layout_width="100dp"
+		        android:layout_height="40dp"
+		        android:paddingLeft="15dp"
+		        android:paddingTop="5dp"
+		        android:textSize="18dp"
+				android:layout_weight="1"
+		        android:text="目的地"
+		        android:textColor="#000000"/>
+        <TextView
+		        android:id="@+id/TS2"
+		        android:layout_width="100dp"
+		        android:layout_height="40dp"
+		        android:paddingLeft="15dp"
+		        android:paddingTop="5dp"
+		        android:textSize="18dp"
+		        android:layout_weight="1"
+		        android:text="行程天数"
+		        android:textColor="#000000"/>      
+		        
+         <TextView
+		        android:id="@+id/TS3"
+		        android:layout_width="100dp"
+		        android:layout_height="40dp"
+		        android:paddingLeft="15dp"
+		        android:paddingTop="5dp"
+		        android:textSize="18dp"
+		        android:layout_weight="1"
+		        android:text="出游方式"
+		        android:textColor="#000000"/>
+            
+       
+         </LinearLayout>
+  
+    
+    <ListView
+        android:id="@+id/LV1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:dividerHeight="1dp"
+        android:divider="#EEE8AA"
+        android:background="#ffffff"
+        android:layout_below="@+id/LL1" >
+    </ListView>
+</RelativeLayout>

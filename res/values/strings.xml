@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sql</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="select">请选择：</string>
+
+    <string-array name="mdd">
+        <item></item>
+        <item>不限</item>
+        <item>丽江古城</item>
+        <item>束河古镇</item>
+        <item>黑龙潭</item>
+        <item>拉市海</item>
+        <item>玉水寨</item>
+        <item>观音峡</item>
+        <item>玉龙雪山</item>
+        <item>蓝月谷</item>
+        <item>虎跳峡</item>
+        <item>泸沽湖</item>
+        <item>香格里拉</item>
+        <item>老君山</item>
+        <item>千龟山</item>
+        <item>玉峰寺</item>
+    </string-array>
+    <string-array name="xcts">
+        <item></item>
+        <item>不限</item>
+        <item>3日游以下</item>
+        <item>4日游</item>
+        <item>5日游</item>
+        <item>6日游</item>
+    </string-array>
+    <string-array name="cyfs">
+        <item></item>
+        <item>不限</item>
+        <item>跟团游</item>
+        <item>自驾游</item>
+    </string-array>
+
+    <string name="title_activity_cs">CsActivity</string>
+
+</resources>
