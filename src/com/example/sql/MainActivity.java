@@ -1,364 +1,338 @@
 package com.example.sql;
 
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
-import android.app.Activity; 
-import android.content.Context; 
-import android.database.Cursor; 
-import android.os.Bundle; 
-import android.view.Menu; 
-import android.view.MenuItem; 
-import android.view.View; 
-import android.view.ViewGroup; 
-import android.widget.AdapterView; 
-import android.widget.BaseAdapter; 
-import android.widget.EditText; 
-import android.widget.ListView; 
-import android.widget.TextView; 
-import android.widget.Toast; 
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.app.Activity; 
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.util.Log;
-import android.view.Menu; 
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner; 
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.Window;     
-import android.content.ContentValues;  
-import android.content.Context; 
-import android.content.Intent;
-import android.database.Cursor;  
-import android.database.SQLException;      
-import android.widget.ListView;  
-import android.widget.SimpleAdapter;  
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
-import android.widget.ProgressBar;
-import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 public class MainActivity extends Activity {
 
-	   private Spinner mSpinner1;
-	   private Spinner mSpinner2; 
-	   private Spinner mSpinner3; 
-	   
-	   private TextView TShow1;
-	   private TextView TShow2;
-	   private TextView TShow3;  
-	   private int count = 1;;
-	  
-	   
-       
-	  SQLiteDatabase mDb;
-	  SQLiteDatabaseDao dao;
-	 // ´æ´¢Êı¾İµÄÊı×éÁĞ±í 
-	   ArrayList<HashMap<String, Object>> listData;
-	 // ÊÊÅäÆ÷ 
-	   SimpleAdapter listItemAdapter;
+    private Spinner mSpinner1;
+    private Spinner mSpinner2;
+    private Spinner mSpinner3;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.activity_main);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.zytitle);
+    private TextView TShow1;
+    private TextView TShow2;
+    private TextView TShow3;
+    private int count = 1;;
 
-		//µÃµ½ÔÚxmlÎÄ¼şÖĞ¶¨ÒåµÄspinner        // ³õÊ¼»¯¿Ø¼ş
-	      mSpinner1 = (Spinner)findViewById(R.id.spinner1);
-	      TShow1 = (TextView)findViewById(R.id.TS1); 
-	      TShow1.setText("Ä¿µÄµØ");
 
-		 // mSpinner1.setPrompt("Ä¿µÄµØ");
-		  mSpinner2 = (Spinner)findViewById(R.id.spinner2);
-		  TShow2 = (TextView)findViewById(R.id.TS2); 
-		  TShow2.setText("ĞĞ³ÌÌìÊı");
-		//  mSpinner2.setPrompt("ĞĞ³ÌÌìÊı");
-		  mSpinner3 = (Spinner)findViewById(R.id.spinner3);
-		  TShow3 = (TextView)findViewById(R.id.TS3); 
-		  TShow3.setText("³öÓÎ·½Ê½");
-		  //mSpinner3.setPrompt("³öÓÎ·½Ê½");     
 
-	      //×¼±¸Ò»¸öÊı×éÊÊÅäÆ÷£¬ÕâÀïµÄÑùÊ½ÊÇÊ¹ÓÃÏµÍ³µÄÑùÊ½    
-		  ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(MainActivity.this, R.array.mdd, R.layout.myspinner);  
-		       //ÉèÖÃÏÂÀ­ÁĞ±íµÄÑùÊ½  //ÉèÖÃÁĞ±íÏîÏÔÊ¾·ç¸ñÎªÍêÈ«ÏÔÊ¾
-		       adapter1.setDropDownViewResource(R.layout.spinneritem); 
-		       //ÎªÏÂÀ­ÁĞ±íÉèÖÃÊÊÅäÆ÷  
-		       mSpinner1.setAdapter(adapter1);
-		       mSpinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-		            @Override
-		            
-		            public void onItemSelected(AdapterView<?> arg0, View arg1,  
-		                    int arg2, long arg3){
-	
-		            	//ÉèÖÃspinnerÑ¡ÏîÑ¡ÖĞºóÒş²ØTextview
-		             	if(count > 1){         
-		 		        	   TShow1.setVisibility(View.INVISIBLE);
-		 		            }
-		 		           count ++;
-		            
-		            }     
-		            @Override
-		            public void onNothingSelected(AdapterView<?> parent) {
-		                // Another interface callback
-		            }
-		            });
-		 ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(MainActivity.this, R.array.xcts, R.layout.myspinner);  
-		 	 // ÉèÖÃÏÂÀ­ÁĞ±íµÄÑùÊ½ 
-		 	   adapter2.setDropDownViewResource(R.layout.spinneritem); 
-		 	  //ÎªÏÂÀ­ÁĞ±íÉèÖÃÊÊÅäÆ÷      //Ê¹ÓÃÊÊÅäÆ÷
-		 	   mSpinner2.setAdapter(adapter2);
-		 	   mSpinner2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-		            @Override
-		            public void onItemSelected(AdapterView<?> parent, View view, 
-		                    int pos, long id) {
-		           
-		            	if(count > 2){         
-		 		        	   TShow2.setVisibility(View.INVISIBLE);
-		 		            }
-		 		           count ++;
-		            }
-		           
-		            @Override
-		            public void onNothingSelected(AdapterView<?> parent) {
-		                // Another interface callback
-		            }
-		        });
-		 ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(MainActivity.this, R.array.cyfs, R.layout.myspinner);  
-			  //ÉèÖÃÏÂÀ­ÁĞ±íµÄÑùÊ½ 
-			   adapter3.setDropDownViewResource(R.layout.spinneritem); 
-			   //ÎªÏÂÀ­ÁĞ±íÉèÖÃÊÊÅäÆ÷  
-			   mSpinner3.setAdapter(adapter3);
-			   mSpinner3.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-		            @Override
-		            public void onItemSelected(AdapterView<?> parent, View view, 
-		                    int pos, long id) {
-		            
-		               // String[] cyfs = getResources().getStringArray(R.array.cyfs);
-		                //Toast.makeText(ZymActivity.this, "Äãµã»÷µÄÊÇ:"+cyfs[pos], 2000).show();
-		    				// TODO Auto-generated method stub
-		    				//Object progressDialog = ProgressDialog.show(ZymActivity.this, 
-		    					//"",	"¼ÓÔØÖĞ...", true, false);    
-		            	if(count > 3){         
-		 		        	   TShow3.setVisibility(View.INVISIBLE);
-		 		            }
-		 		           count ++;
-		            }
-		                
-		            @Override
-		            public void onNothingSelected(AdapterView<?> parent) {
-		                // Another interface callback
-		            }
-		        });
-			   
-			   dao = new SQLiteDatabaseDao();
+    SQLiteDatabase mDb;
+    SQLiteDatabaseDao dao;
+    // å­˜å‚¨æ•°æ®çš„æ•°ç»„åˆ—è¡¨
+    ArrayList<HashMap<String, Object>> listData;
+    // é€‚é…å™¨
+    SimpleAdapter listItemAdapter;
 
-				ListView mylist = (ListView) findViewById(R.id.LV1);
-				listItemAdapter = new SimpleAdapter(MainActivity.this,listData,// Êı¾İÔ´  
-						R.layout.list_row,// ListItemµÄXMLÊµÏÖ  
-						 // ¶¯Ì¬Êı×éÓëImageItem¶ÔÓ¦µÄ×ÓÏî  
-						 new String[] { "image", "lxname", "cost" },  
-						 // ImageItemµÄXMLÎÄ¼şÀïÃæµÄÒ»¸öImageView,Á½¸öTextView ID  
-						new int[] { R.id.image, R.id.lxname, R.id.cost });
-				mylist.setAdapter(listItemAdapter);
-			
-				//list.setOnCreateContextMenuListener(listviewLongPress); 	
-				
-				mylist.setOnItemClickListener(new OnItemClickListener(){
-					 
-		            @Override
-		            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-		                    long arg3) {
-		                // TODO Auto-generated method stub
-		            	//»ñµÃÑ¡ÖĞÏîµÄHashMap¶ÔÏó   
-		               // HashMap<String,String> map=(HashMap<String,String>) mylist.getItemAtPosition(arg2);   
-		              //  String title=map.get("itemTitle");   
-		              //  String content=map.get("itemContent");   
-		               // Toast.makeText(getApplicationContext(),    
-		                     //   "ÄãÑ¡ÔñÁËµÚ"+arg2+"¸öItem£¬itemTitleµÄÖµÊÇ£º"+title+"itemContentµÄÖµÊÇ:"+content,   
-		                       // Toast.LENGTH_SHORT).show();   
-		            	startActivity(new Intent(MainActivity.this,
-		            			CsActivity.class));
-		                }
-		        });
-				
-		 } 
-		          	 
-	
-	// Êı¾İ¿â²Ù×÷Àà  
-	  
-			class SQLiteDatabaseDao {  
-			  
-			 public SQLiteDatabaseDao() {  
-			 mDb = openOrCreateDatabase("mydb.db",  
-			 SQLiteDatabase.CREATE_IF_NECESSARY, null);  
-			 //³õÊ¼»¯´´½¨±í  
-			 createTable(mDb, "luxianTable");
-			 createTable(mDb, "luxianTable2");
-			 //³õÊ¼»¯²åÈëÊı¾İ  
-			 insert(mDb, "luxianTable");  
-			 insert(mDb, "luxianTable2");  
-			 //³õÊ¼»¯»ñÈ¡ËùÓĞÊı¾İ±íÊı¾İ  
-			 getAllData("luxianTable");  
-			 getAllData("luxianTable2");  
-			 }  
-			  
-			 // ´´½¨Ò»¸öÊı¾İ¿â  
-			 public void createTable(SQLiteDatabase mDb, String table) {  
-				 try {  
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        setContentView(R.layout.activity_main);
+        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.zytitle);
+
+        //å¾—åˆ°åœ¨xmlæ–‡ä»¶ä¸­å®šä¹‰çš„spinner        // åˆå§‹åŒ–æ§ä»¶
+        mSpinner1 = (Spinner)findViewById(R.id.spinner1);
+        TShow1 = (TextView)findViewById(R.id.TS1);
+        TShow1.setText("ç›®çš„åœ°");
+
+        // mSpinner1.setPrompt("ç›®çš„åœ°");
+        mSpinner2 = (Spinner)findViewById(R.id.spinner2);
+        TShow2 = (TextView)findViewById(R.id.TS2);
+        TShow2.setText("è¡Œç¨‹å¤©æ•°");
+        //  mSpinner2.setPrompt("è¡Œç¨‹å¤©æ•°");
+        mSpinner3 = (Spinner)findViewById(R.id.spinner3);
+        TShow3 = (TextView)findViewById(R.id.TS3);
+        TShow3.setText("å‡ºæ¸¸æ–¹å¼");
+        //mSpinner3.setPrompt("å‡ºæ¸¸æ–¹å¼");
+
+        //å‡†å¤‡ä¸€ä¸ªæ•°ç»„é€‚é…å™¨ï¼Œè¿™é‡Œçš„æ ·å¼æ˜¯ä½¿ç”¨ç³»ç»Ÿçš„æ ·å¼
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(MainActivity.this, R.array.mdd, R.layout.myspinner);
+        //è®¾ç½®ä¸‹æ‹‰åˆ—è¡¨çš„æ ·å¼  //è®¾ç½®åˆ—è¡¨é¡¹æ˜¾ç¤ºé£æ ¼ä¸ºå®Œå…¨æ˜¾ç¤º
+        adapter1.setDropDownViewResource(R.layout.spinneritem);
+        //ä¸ºä¸‹æ‹‰åˆ—è¡¨è®¾ç½®é€‚é…å™¨
+        mSpinner1.setAdapter(adapter1);
+        mSpinner1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3){
+
+                //è®¾ç½®spinneré€‰é¡¹é€‰ä¸­åéšè—Textview
+                if(count > 1){
+                    TShow1.setVisibility(View.INVISIBLE);
+                }
+                count ++;
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(MainActivity.this, R.array.xcts, R.layout.myspinner);
+        // è®¾ç½®ä¸‹æ‹‰åˆ—è¡¨çš„æ ·å¼
+        adapter2.setDropDownViewResource(R.layout.spinneritem);
+        //ä¸ºä¸‹æ‹‰åˆ—è¡¨è®¾ç½®é€‚é…å™¨      //ä½¿ç”¨é€‚é…å™¨
+        mSpinner2.setAdapter(adapter2);
+        mSpinner2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+
+                if(count > 2){
+                    TShow2.setVisibility(View.INVISIBLE);
+                }
+                count ++;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(MainActivity.this, R.array.cyfs, R.layout.myspinner);
+        //è®¾ç½®ä¸‹æ‹‰åˆ—è¡¨çš„æ ·å¼
+        adapter3.setDropDownViewResource(R.layout.spinneritem);
+        //ä¸ºä¸‹æ‹‰åˆ—è¡¨è®¾ç½®é€‚é…å™¨
+        mSpinner3.setAdapter(adapter3);
+        mSpinner3.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+
+                // String[] cyfs = getResources().getStringArray(R.array.cyfs);
+                //Toast.makeText(ZymActivity.this, "ä½ ç‚¹å‡»çš„æ˜¯:"+cyfs[pos], 2000).show();
+                // TODO Auto-generated method stub
+                //Object progressDialog = ProgressDialog.show(ZymActivity.this,
+                //"",	"åŠ è½½ä¸­...", true, false);
+                if(count > 3){
+                    TShow3.setVisibility(View.INVISIBLE);
+                }
+                count ++;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callback
+            }
+        });
+
+        dao = new SQLiteDatabaseDao();
+
+        ListView mylist = (ListView) findViewById(R.id.LV1);
+        listItemAdapter = new SimpleAdapter(MainActivity.this,listData,// æ•°æ®æº
+                R.layout.list_row,// ListItemçš„XMLå®ç°
+                // åŠ¨æ€æ•°ç»„ä¸ImageItemå¯¹åº”çš„å­é¡¹
+                new String[] { "image", "lxname", "cost" },
+                // ImageItemçš„XMLæ–‡ä»¶é‡Œé¢çš„ä¸€ä¸ªImageView,ä¸¤ä¸ªTextView ID
+                new int[] { R.id.image, R.id.lxname, R.id.cost });
+        mylist.setAdapter(listItemAdapter);
+
+        //list.setOnCreateContextMenuListener(listviewLongPress);
+
+        mylist.setOnItemClickListener(new OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                // TODO Auto-generated method stub
+                //è·å¾—é€‰ä¸­é¡¹çš„HashMapå¯¹è±¡
+                // HashMap<String,String> map=(HashMap<String,String>) mylist.getItemAtPosition(arg2);
+                //  String title=map.get("itemTitle");
+                //  String content=map.get("itemContent");
+                // Toast.makeText(getApplicationContext(),
+                //   "ä½ é€‰æ‹©äº†ç¬¬"+arg2+"ä¸ªItemï¼ŒitemTitleçš„å€¼æ˜¯ï¼š"+title+"itemContentçš„å€¼æ˜¯:"+content,
+                // Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this,
+                        CsActivity.class));
+            }
+        });
+
+    }
+
+
+    // æ•°æ®åº“æ“ä½œç±»
+
+    class SQLiteDatabaseDao {
+
+        public SQLiteDatabaseDao() {
+            mDb = openOrCreateDatabase("mydb.db",
+                    SQLiteDatabase.CREATE_IF_NECESSARY, null);
+            //åˆå§‹åŒ–åˆ›å»ºè¡¨
+            createTable(mDb, "luxianTable");
+            createTable(mDb, "luxianTable2");
+            //åˆå§‹åŒ–æ’å…¥æ•°æ®
+            insert(mDb, "luxianTable");
+            insert(mDb, "luxianTable2");
+            //åˆå§‹åŒ–è·å–æ‰€æœ‰æ•°æ®è¡¨æ•°æ®
+            getAllData("luxianTable");
+            getAllData("luxianTable2");
+        }
+
+        // åˆ›å»ºä¸€ä¸ªæ•°æ®åº“
+        public void createTable(SQLiteDatabase mDb, String table) {
+            try {
 					/* String sql = "create table LXTable(id integer primary key autoincrement, lxname text not null, cost text not null,image text,mdd varchar(100),xcts varchar(100),cyfs varchar(100))";
 					  mDb.execSQL(sql);}
-					  catch (SQLException e) {  
-							 Toast.makeText(getApplicationContext(), "Êı¾İ±í´´½¨Ê§°Ü",  
+					  catch (SQLException e) {
+							 Toast.makeText(getApplicationContext(), "æ•°æ®è¡¨åˆ›å»ºå¤±è´¥",
 							 Toast.LENGTH_LONG).show();
 					  }*/
-				 mDb.execSQL( "create table if not exists "  
-				 + table 
-				 + " (id integer primary key autoincrement, "  
-				 + "lxname text not null, cost text not null,image text,mdd text,xcts text,cyfs text)");  
-				 } catch (SQLException e) {  
-				 Toast.makeText(getApplicationContext(), "Êı¾İ±í´´½¨Ê§°Ü",  
-				 Toast.LENGTH_LONG).show();  
-				 }
-				 try {
-				 mDb.execSQL( "create table if not exists "  
-						 + table  
-						 + " (id integer primary key autoincrement, "  
-						 + "lxname text not null, lxts text not null,ckxc text,fysm text)");  
-						 } catch (SQLException e1) {  
-							 Toast.makeText(getApplicationContext(), "Êı¾İ±í´´½¨Ê§°Ü",  
-									 Toast.LENGTH_LONG).show(); 
-						 }
-			 }  
-			  
-			 // ²åÈëÊı¾İ  
-			 public void insert(SQLiteDatabase mDb, String table) {  
-			  
-			 // ³õÊ¼»¯²åÈë8ÌõÊı¾İ  
-					ContentValues values = new ContentValues();
-					values.put("lxname", "Àö½­ãò¹ÁºşËÄÌìÈıÍíÓÎ");
-					values.put("cost", "»¨·Ñ£º480");
-					values.put("image", R.drawable.luguhu);
-					values.put("mdd", "ãò¹Áºş");
-					values.put("xcts", "4ÈÕÓÎ");
-				    values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+                mDb.execSQL( "create table if not exists "
+                        + table
+                        + " (id integer primary key autoincrement, "
+                        + "lxname text not null, cost text not null,image text,mdd text,xcts text,cyfs text)");
+            } catch (SQLException e) {
+                Toast.makeText(getApplicationContext(), "æ•°æ®è¡¨åˆ›å»ºå¤±è´¥",
+                        Toast.LENGTH_LONG).show();
+            }
+            try {
+                mDb.execSQL( "create table if not exists "
+                        + table
+                        + " (id integer primary key autoincrement, "
+                        + "lxname text not null, lxts text not null,ckxc text,fysm text)");
+            } catch (SQLException e1) {
+                Toast.makeText(getApplicationContext(), "æ•°æ®è¡¨åˆ›å»ºå¤±è´¥",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
 
-					values.put("lxname", "Àö½­¹Å³ÇÊøºÓÒ»ÈÕÓÎ");
-					values.put("cost", "»¨·Ñ£º200");
-					values.put("image", R.drawable.lijianggucheng);
-					values.put("mdd", "ÊøºÓ");
-					values.put("xcts", "1ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+        // æ’å…¥æ•°æ®
+        public void insert(SQLiteDatabase mDb, String table) {
 
-					values.put("lxname", "Àö½­Ïã¸ñÀïÀ­ÈıÌìÁ½ÍíÓÎ");
-					values.put("cost", "»¨·Ñ£º580");
-					values.put("image", R.drawable.xainggelila);
-					values.put("mdd", "Ïã¸ñÀïÀ­");
-					values.put("xcts", "3ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
-					
-					values.put("lxname", "Àö½­¹Å³ÇºÚÁúÌ¶À­ÊĞº£Ò»ÈÕÓÎ");
-					values.put("cost", "»¨·Ñ£º180");
-					values.put("image", R.drawable.heilongtan);
-					values.put("mdd", "À­ÊĞº£");
-					values.put("xcts", "1ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+            // åˆå§‹åŒ–æ’å…¥8æ¡æ•°æ®
+            ContentValues values = new ContentValues();
+            values.put("lxname", "ä¸½æ±Ÿæ³¸æ²½æ¹–å››å¤©ä¸‰æ™šæ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š480");
+            values.put("image", R.drawable.luguhu);
+            values.put("mdd", "æ³¸æ²½æ¹–");
+            values.put("xcts", "4æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
-					values.put("lxname", "Àö½­¹Å³Ç¹ÛÒôÏ¿Ò»ÈÕÓÎ");
-					values.put("cost", "»¨·Ñ£º280");
-					values.put("image", R.drawable.guanyinxia);
-					values.put("mdd", "¹ÛÒôÏ¿");
-					values.put("xcts", "1ÈÕÓÎ");
-					values.put("cyfs", "×Ô¼İÓÎ");
-					mDb.insert(table, null, values);
+            values.put("lxname", "ä¸½æ±Ÿå¤åŸæŸæ²³ä¸€æ—¥æ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š200");
+            values.put("image", R.drawable.lijianggucheng);
+            values.put("mdd", "æŸæ²³");
+            values.put("xcts", "1æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
-					values.put("lxname", "Àö½­¹Å³ÇÓñÁúÑ©É½Ïã¸ñÀïÀ­ËÄÌìÈıÍíÓÎ");
-					values.put("cost", "»¨·Ñ£º880");
-					values.put("image", R.drawable.xainggelila);
-					values.put("mdd", "Ïã¸ñÀïÀ­");
-					values.put("xcts", "4ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+            values.put("lxname", "ä¸½æ±Ÿé¦™æ ¼é‡Œæ‹‰ä¸‰å¤©ä¸¤æ™šæ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š580");
+            values.put("image", R.drawable.xainggelila);
+            values.put("mdd", "é¦™æ ¼é‡Œæ‹‰");
+            values.put("xcts", "3æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
-					values.put("lxname", "Àö½­ÓñÁúÑ©É½À¶ÔÂ¹Èãò¹ÁºşÎåÌìËÄÍíÓÎ");
-					values.put("cost", "»¨·Ñ£º1080");
-					values.put("image", R.drawable.lanyuegu);
-					values.put("mdd", "ãò¹Áºş");
-					values.put("xcts", "5ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+            values.put("lxname", "ä¸½æ±Ÿå¤åŸé»‘é¾™æ½­æ‹‰å¸‚æµ·ä¸€æ—¥æ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š180");
+            values.put("image", R.drawable.heilongtan);
+            values.put("mdd", "æ‹‰å¸‚æµ·");
+            values.put("xcts", "1æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
-					values.put("lxname", "ÓñË®Õ¯»¢ÌøÏ¿Á½ÌìÒ»ÍíÓÎ");
-					values.put("cost", "»¨·Ñ£º280");
-					values.put("image", R.drawable.hutiaoxia);
-					values.put("mdd", "»¢ÌøÏ¿");
-					values.put("xcts", "2ÈÕÓÎ");
-					values.put("cyfs", "¸úÍÅÓÎ");
-					mDb.insert(table, null, values);
+            values.put("lxname", "ä¸½æ±Ÿå¤åŸè§‚éŸ³å³¡ä¸€æ—¥æ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š280");
+            values.put("image", R.drawable.guanyinxia);
+            values.put("mdd", "è§‚éŸ³å³¡");
+            values.put("xcts", "1æ—¥æ¸¸");
+            values.put("cyfs", "è‡ªé©¾æ¸¸");
+            mDb.insert(table, null, values);
 
+            values.put("lxname", "ä¸½æ±Ÿå¤åŸç‰é¾™é›ªå±±é¦™æ ¼é‡Œæ‹‰å››å¤©ä¸‰æ™šæ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š880");
+            values.put("image", R.drawable.xainggelila);
+            values.put("mdd", "é¦™æ ¼é‡Œæ‹‰");
+            values.put("xcts", "4æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
-				}
+            values.put("lxname", "ä¸½æ±Ÿç‰é¾™é›ªå±±è“æœˆè°·æ³¸æ²½æ¹–äº”å¤©å››æ™šæ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š1080");
+            values.put("image", R.drawable.lanyuegu);
+            values.put("mdd", "æ³¸æ²½æ¹–");
+            values.put("xcts", "5æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
+
+            values.put("lxname", "ç‰æ°´å¯¨è™è·³å³¡ä¸¤å¤©ä¸€æ™šæ¸¸");
+            values.put("cost", "èŠ±è´¹ï¼š280");
+            values.put("image", R.drawable.hutiaoxia);
+            values.put("mdd", "è™è·³å³¡");
+            values.put("xcts", "2æ—¥æ¸¸");
+            values.put("cyfs", "è·Ÿå›¢æ¸¸");
+            mDb.insert(table, null, values);
 
 
+        }
 
-					//}
 
-			 // ²éÑ¯ËùÓĞÊı¾İ  
-		 public void getAllData(String table) { 
-			 Cursor c = mDb.rawQuery("select * from " + table, null);  
-			 int columnsSize = c.getColumnCount();  
-			 listData = new ArrayList<HashMap<String, Object>>();  
-			 // »ñÈ¡±íµÄÄÚÈİ  
-			 while (c.moveToNext()) {  
-			 HashMap<String, Object> map = new HashMap<String, Object>();  
-			//for (int i = 0; i < columnsSize; i++) {  
-			 map.put("id", c.getString(0));  
-			 map.put("lxname", c.getString(1));  
-			 map.put("cost", c.getString(2));  
-			 map.put("image", c.getString(3));  
-			// map.put("mdd", c.getString(4));
-			// map.put("xcts", c.getString(5));
-			// map.put("cyfs", c.getString(6));
-			 //}  
-			 listData.add(map);  
-			 }              
-			 } 
-			 // É¾³ıÒ»ÌõÊı¾İ  
-			/* public boolean delete(SQLiteDatabase mDb, String table, int id) {  
-			 String whereClause = "id=?";  
-			 String[] whereArgs = new String[] { String.valueOf(id) };  
-			 try {  
-			 mDb.delete(table, whereClause, whereArgs);  
-			 } catch (SQLException e) {  
-			 Toast.makeText(getApplicationContext(), "É¾³ıÊı¾İ¿âÊ§°Ü",  
-			 Toast.LENGTH_LONG).show();  
-			 return false;  
-			 }  
-			 return true;  
-			 }  
-			 }  
-			 @Override  
-				public void finish() {  
-				        // TODO Auto-generated method stub  
-				        super.finish();  
-				        mDb.close();  
+
+        //}
+
+        // æŸ¥è¯¢æ‰€æœ‰æ•°æ®
+        public void getAllData(String table) {
+            Cursor c = mDb.rawQuery("select * from " + table, null);
+            int columnsSize = c.getColumnCount();
+            listData = new ArrayList<HashMap<String, Object>>();
+            // è·å–è¡¨çš„å†…å®¹
+            while (c.moveToNext()) {
+                HashMap<String, Object> map = new HashMap<String, Object>();
+                //for (int i = 0; i < columnsSize; i++) {
+                map.put("id", c.getString(0));
+                map.put("lxname", c.getString(1));
+                map.put("cost", c.getString(2));
+                map.put("image", c.getString(3));
+                // map.put("mdd", c.getString(4));
+                // map.put("xcts", c.getString(5));
+                // map.put("cyfs", c.getString(6));
+                //}
+                listData.add(map);
+            }
+        }
+        // åˆ é™¤ä¸€æ¡æ•°æ®
+			/* public boolean delete(SQLiteDatabase mDb, String table, int id) {
+			 String whereClause = "id=?";
+			 String[] whereArgs = new String[] { String.valueOf(id) };
+			 try {
+			 mDb.delete(table, whereClause, whereArgs);
+			 } catch (SQLException e) {
+			 Toast.makeText(getApplicationContext(), "åˆ é™¤æ•°æ®åº“å¤±è´¥",
+			 Toast.LENGTH_LONG).show();
+			 return false;
+			 }
+			 return true;
+			 }
+			 }
+			 @Override
+				public void finish() {
+				        // TODO Auto-generated method stub
+				        super.finish();
+				        mDb.close();
 				    }
 
 		       }*/
-	}
+    }
 
 }
 
